@@ -4,10 +4,12 @@ import styles from "./page.module.css";
 import { useEffect, useRef, useState } from "react";
 import { isCommand, findPath } from "@/utils";
 import { paths } from "@/utils/paths";
+import { IPaths } from "@/utils/@Types";
 
 export default function Home() {
   const [lines, setLines] = useState<string[]>([]);
-  const [currentPlace, setCurrentPlace] = useState("Départ");
+  const [currentPath, setCurrentPath] = useState<string[]>([]);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const displayedLinesSectionRef = useRef<HTMLElement | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
@@ -29,19 +31,33 @@ export default function Home() {
     //setLines([...lines, inputValue]);
     setInputValue("");
     //console.log(isCommand(inputValue))
-    const inputPaths = inputValue.split(" ")[1].split("/");
-    
+    let inputPaths = inputValue.split(" ")[1].split("/");
+
     if (isCommand(inputValue)) {
-      const path = findPath(paths, inputPaths);
-      console.log(path)
-      if(path){
-      //const keys: string[] = Object.keys(path);
-      setLines([
-        ...lines,
-        `Vous êtes à ${path.name}`,
-      ]);
+      if (currentPath && currentPath.length) {
+        let newPath = [...currentPath];
+        inputPaths.forEach((path) => {
+          if (path === "..") {
+            inputPaths.slice(1);
+            newPath.pop();
+          }
+          if (path === "") {
+            inputPaths.slice(1);
+          }
+          if (path !== "" && path !== "..") {
+            newPath.push(path);
+          }
+        });
+        inputPaths = [...newPath];
       }
-      
+      const completePath = [...inputPaths];
+      const result = findPath(paths, inputPaths);
+
+      if (result) {
+        setCurrentPath([...completePath]);
+        //const keys: string[] = Object.keys(path);
+        setLines([...lines, `Vous êtes à ${result.name}`]);
+      }
     } else {
       setLines([...lines, "Commande inconnue"]);
     }
@@ -64,7 +80,7 @@ export default function Home() {
             );
           })}
       </section>
-
+      <p style={{ color: "white" }}>{JSON.stringify(currentPath)}</p>
       <form
         id='form_element'
         className={styles.main_form}

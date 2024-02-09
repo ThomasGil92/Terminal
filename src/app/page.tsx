@@ -2,13 +2,13 @@
 import TypingParagraph from "./components/TypingParagraph";
 import styles from "./page.module.css";
 import { useEffect, useRef, useState } from "react";
-import { isCommand, findPath } from "@/utils";
+import { isCommand, findPath, makeNewInputPath } from "@/utils";
 import { paths } from "@/utils/paths";
 import { IPaths } from "@/utils/@Types";
 
 export default function Home() {
   const [lines, setLines] = useState<string[]>([]);
-  const [currentPath, setCurrentPath] = useState<string[]>([]);
+  const [currentPath, setCurrentPath] = useState<string[] | []>([]);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const displayedLinesSectionRef = useRef<HTMLElement | null>(null);
@@ -31,25 +31,10 @@ export default function Home() {
     let inputPaths = inputValue.split(" ")[1].split("/");
 
     if (isCommand(inputValue)) {
-      if (currentPath && currentPath.length) {
-        let newPath = [...currentPath];
-        inputPaths.forEach((path) => {
-          if (path === "..") {
-            inputPaths.slice(1);
-            newPath.pop();
-          }
-          if (path === "") {
-            inputPaths.slice(1);
-          }
-          if (path !== "" && path !== "..") {
-            newPath.push(path);
-          }
-        });
-        inputPaths = [...newPath];
-      }
-      const completePath = [...inputPaths];
+      const completePath = [...makeNewInputPath(currentPath, inputPaths)];
+      inputPaths = [...makeNewInputPath(currentPath, inputPaths)];
       const result = findPath(paths, inputPaths);
-console.log(result)
+      console.log(result);
       if (result) {
         setCurrentPath([...completePath]);
         //const keys: string[] = Object.keys(path);

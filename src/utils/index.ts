@@ -17,6 +17,27 @@ export const findPath = <T, K extends keyof T>(
   }
 };
 
+export const makeNewInputPath=(currentPath:string[],inputPaths:string[])=>{
+  if (currentPath.length) {
+    let newPath = [...currentPath];
+    inputPaths.forEach((path) => {
+      if (path === "..") {
+        inputPaths.slice(1);
+        newPath.pop();
+      }
+      if (path === "") {
+        inputPaths.slice(1);
+      }
+      if (path !== "" && path !== "..") {
+        newPath.push(path);
+      }
+    });
+    inputPaths = [...newPath];
+    return inputPaths
+  }
+  return inputPaths
+}
+
 export const isCommand = (inputCommand: string): boolean => {
   const inputValid = inputCommand.split(" ")[0] === "cd";
 

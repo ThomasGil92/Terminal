@@ -28,9 +28,6 @@ export default function Home() {
 
   const handleTerminalinput = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //setLines([...lines, inputValue]);
-    setInputValue("");
-    //console.log(isCommand(inputValue))
     let inputPaths = inputValue.split(" ")[1].split("/");
 
     if (isCommand(inputValue)) {
@@ -52,7 +49,7 @@ export default function Home() {
       }
       const completePath = [...inputPaths];
       const result = findPath(paths, inputPaths);
-
+console.log(result)
       if (result) {
         setCurrentPath([...completePath]);
         //const keys: string[] = Object.keys(path);
@@ -61,6 +58,8 @@ export default function Home() {
     } else {
       setLines([...lines, "Commande inconnue"]);
     }
+
+    setInputValue("");
     //trouverValeur(paths, ["Départ", "École", "PorteEntrée"]);
   };
   return (

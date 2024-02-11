@@ -2,13 +2,21 @@
 import TypingParagraph from "./components/TypingParagraph";
 import styles from "./page.module.css";
 import { useEffect, useRef, useState } from "react";
-import { isCommand, findPath, makeNewInputPath } from "@/utils";
+import {
+  isCommand,
+  findPath,
+  makeNewInputPath,
+  listPathFromCurrentObject,
+  findPnj,
+} from "@/utils";
 import { paths } from "@/utils/paths";
 import { IPaths } from "@/utils/@Types";
+import { usePathObject } from "@/domain/useCases/usePathsObject";
 
 export default function Home() {
   const [lines, setLines] = useState<string[]>([]);
-  const [currentPath, setCurrentPath] = useState<string[] | []>([]);
+  const { currentPath, setCurrentPath, currentObject, setCurrentObject } =
+    usePathObject<string[], IPaths>(["Départ"], paths.Départ);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const displayedLinesSectionRef = useRef<HTMLElement | null>(null);
@@ -28,24 +36,59 @@ export default function Home() {
 
   const handleTerminalinput = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let inputPaths = inputValue.split(" ")[1].split("/");
+    console.log(inputValue);
+    let inputPaths = inputValue.split(" ")[1]?.split("/");
 
-    if (isCommand(inputValue)) {
-      const completePath = [...makeNewInputPath(currentPath, inputPaths)];
-      inputPaths = [...makeNewInputPath(currentPath, inputPaths)];
-      const result = findPath(paths, inputPaths);
-      console.log(result);
-      if (result) {
-        setCurrentPath([...completePath]);
-        //const keys: string[] = Object.keys(path);
-        setLines([...lines, `Vous êtes à ${result.name}`]);
-      }
-    } else {
-      setLines([...lines, "Commande inconnue"]);
+    const command = isCommand(inputValue);
+    switch (command) {
+      case "cd":
+        const completePath = [...makeNewInputPath(currentPath, inputPaths)];
+        inputPaths = [...makeNewInputPath(currentPath, inputPaths)];
+        const result = findPath(paths, inputPaths);
+        if (result) {
+          setCurrentPath([...completePath]);
+          //const keys: string[] = Object.keys(path);
+          setLines([...lines, `Vous êtes à ${result.name}`]);
+          setCurrentObject({ ...result });
+        } else {
+          setLines([...lines, `Aucun chemin ne correspond.`]);
+        }
+        setInputValue("");
+        break;
+      case "ls":
+        const keysWithObjects = listPathFromCurrentObject(currentObject);
+        keysWithObjects.length > 0
+          ? setLines([
+              ...lines,
+              `Vous pouvez accéder à ${keysWithObjects
+                .map((objectKey) => {
+                  return `${objectKey}/ `;
+                })
+                .join("& ")}`,
+            ])
+          : setLines([...lines, `C'est un cul-de-sac`]);
+        setInputValue("");
+        break;
+      case "cat":
+        const pnj = findPnj(currentObject, inputPaths);
+        pnj !== null
+          ? setLines([...lines, `${pnj.name}:`, `- ${pnj.pre_sentence}`])
+          : setLines([
+              ...lines,
+              `Aucun personnage ne porte le nom ${inputPaths[0]}`,
+            ]);
+
+        setInputValue("");
+        break;
+
+      case false:
+        setLines([...lines, "Commande inconnue"]);
+        setInputValue("");
+        break;
+      default:
+        setInputValue("");
+        return;
     }
-
-    setInputValue("");
-    //trouverValeur(paths, ["Départ", "École", "PorteEntrée"]);
   };
   return (
     <main className={styles.main}>

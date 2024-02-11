@@ -1,4 +1,4 @@
-import { findPath, isCommand, makeNewInputPath } from "../../utils";
+import { findPath, isCommand, listPathFromCurrentObject, makeNewInputPath } from "../../utils";
 import { describe, test, it, expect } from "vitest";
 
 import { paths } from "../../utils/paths";
@@ -27,34 +27,40 @@ describe("makeNewInputPath function", () => {
     ]);
   });
   it("should return the second parameter if we pass in parameter the whole paths object and an Array of strings of keys in bad order", () => {
-    const newInputPath:[] = [];
+    const newInputPath: [] = [];
     expect(makeNewInputPath(currentPath, newInputPath)).toStrictEqual(
       currentPath,
     );
   });
   it("should return empty array if both currentPath and newInputPath are empty", () => {
-    const newInputPath:[] = [];
-    const emptyCurrentPath:[]=[]
+    const newInputPath: [] = [];
+    const emptyCurrentPath: [] = [];
     expect(makeNewInputPath(emptyCurrentPath, newInputPath)).toStrictEqual([]);
   });
   it("should return a good path arrays if we pass in parameter the last paths object of keys and new paths object with '..' to indicate that we back up in the paths object", () => {
     const backUpKey = [".."];
-    const backUpDownKey = ["..","Foret"];
-    expect(makeNewInputPath(currentPath, backUpKey)).toStrictEqual(
-      ["Départ"],
-    );
-    expect(makeNewInputPath(currentPath, backUpDownKey)).toStrictEqual(
-      ["Départ","Foret"],
-    );
+    const backUpDownKey = ["..", "Foret"];
+    expect(makeNewInputPath(currentPath, backUpKey)).toStrictEqual(["Départ"]);
+    expect(makeNewInputPath(currentPath, backUpDownKey)).toStrictEqual([
+      "Départ",
+      "Foret",
+    ]);
   });
 });
 describe("isCommand function", () => {
-  it("should return true if the first splitted string is 'cd'", () => {
-    const inputValue = "cd Départ/École";
-    expect(isCommand(inputValue)).toBeTruthy();
+  it("should return true if the first splitted string is a known command", () => {
+    const KNOWN_COMMANDS = ["cd", "ls","cat"];
+    KNOWN_COMMANDS.forEach((command) => {
+      expect(isCommand(command)).toBeTruthy();
+    });
   });
-  it("should return false if the first splitted string is not 'cd'", () => {
+  it("should return false if the first splitted string is not known command", () => {
     const inputValue = "f Départ/École";
     expect(isCommand(inputValue)).toBeFalsy();
   });
+});
+describe("listPathFromCurrentObject",()=>{
+  it("should render keys of object which are in the current object",()=>{
+    expect(listPathFromCurrentObject(paths.Départ)).toStrictEqual(["École","Foret"])
+  })
 });

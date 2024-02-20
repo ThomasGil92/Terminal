@@ -1,4 +1,5 @@
-import { IPaths } from "./@Types";
+import { Dispatch, SetStateAction } from "react";
+import { IPaths, Lines } from "./@Types";
 
 //TODO: pour remonter, trouver un chemin avec le nombre de ../../ pour laisser 2éléments dans le tableau des chemin
 export const findPath = <T, K extends keyof T>(
@@ -19,22 +20,35 @@ export const findPath = <T, K extends keyof T>(
   }
 };
 
-export const listPathFromCurrentObject = (currentObject:IPaths) => {
+export function listPathFromCurrentObject(currentObject: IPaths) {
   const keysWithObjects: string[] = [];
 
   for (const key in currentObject) {
-    if (typeof currentObject[key] === "object" && currentObject[key] !== null && key!=="pnj") {
+    if (
+      typeof currentObject[key] === "object" &&
+      currentObject[key] !== null &&
+      key !== "pnj" &&
+      key !== "placeIntro" &&
+      key !== "placeText"
+    ) {
       keysWithObjects.push(key);
     }
   }
-  return keysWithObjects
-};
-
-export const findPnj=(currentObject:IPaths,inputPaths:string[])=>{
-  const pnj=currentObject.pnj[inputPaths[0]]
-  if(pnj) return pnj;
-  return null
+  return keysWithObjects;
 }
+
+export const findPnj = (currentObject: IPaths, inputPaths: string[]) => {
+  const pnj = currentObject.pnj[inputPaths[0]];
+  if (pnj) {
+    return pnj;
+  }
+  return null;
+};
+export const isTherePnj = (currentObject: IPaths) => {
+  const pnj = currentObject.pnj;
+  if (pnj) return pnj;
+  return null;
+};
 
 export const makeNewInputPath = (
   currentPath: string[],
@@ -61,7 +75,7 @@ export const makeNewInputPath = (
 };
 
 export const isCommand = (inputCommand: string): boolean | string => {
-  const command =inputCommand.split(" ")[0]
+  const command = inputCommand.split(" ")[0];
 
   switch (command) {
     case "cd":
@@ -70,7 +84,37 @@ export const isCommand = (inputCommand: string): boolean | string => {
       return "ls";
     case "cat":
       return "cat";
+    case "help":
+      return "help";
     default:
       return false;
   }
+};
+
+export const setLinesWithDelayFromStringArray = (
+  array: string[],
+  setLines: Dispatch<SetStateAction<Lines[]>>,
+  classes?: string,
+) => {
+  array.forEach((sentence: string, index: number) => {
+    setTimeout(() => {
+      setLines((prevLines) => [
+        ...prevLines,
+        {
+          sentence,
+          tag: { name: sentence === "br" ? "br" : "p", classes },
+        },
+      ]);
+    }, index * 1000);
+  });
+};
+export const setLinesWithDelayFromLineObject = (
+  lines: Lines[],
+  setLines: Dispatch<SetStateAction<Lines[]>>,
+) => {
+  lines.forEach((line: Lines, index: number) => {
+    setTimeout(() => {
+      setLines((prevLines) => [...prevLines, line]);
+    }, index * 1000);
+  });
 };

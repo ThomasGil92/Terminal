@@ -1,0 +1,53 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4rem;
+  background-color: black;
+  height: 100vh;
+  color: #efefef;
+  &__form {
+    font-size: 2rem;
+    &__input {
+      color: #efefef;
+      font-family: "Space Mono", monospace;
+      background-color: black;
+      border: none;
+      height: 2rem;
+      padding: 5px;
+      font-size: 2rem;
+    }
+
+    &__input:focus {
+      outline: none;
+    }
+  }
+
+  .displayedTextSection {
+    overflow-y: auto;
+    overflow: hidden;
+    height: 100%;
+    .img_container {
+      display: flex;
+      .displayedLine_img {
+        justify-content: end;
+      }
+    }
+    .displayedLine {
+      font-size: 1.5rem;
+    }
+    .main__text__command{
+      color:#7fff00
+    }
+    li {
+      list-style: none;
+      margin-left:10px
+    }
+    .list__pnj {
+      color: #db7093;
+    }
+    .list__place {
+      color: orange;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4rem;
+  background-color: black;
+  height: 100vh;
+  color:#efefef
+}
+
+.main_input {
+  color: black;
+  font-family: "Space Mono", monospace;
+  /*   background-color: black;*/
+  border: none;
+  height: 4rem;
+  padding: 5px;
+  font-size: 2rem;
+}
+
+.main_input:focus {
+  outline: none;
+}
+
+.displayedTextSection {
+  overflow-y: auto;
+  overflow: hidden;
+  height: 100%;
+  .img_container {
+    display: flex;
+    .displayedLine_img {
+      justify-content: end;
+    }
+  }
+  .displayedLine {
+    //color: #efefef;
+    font-size: 1.2rem;
+  }
+}

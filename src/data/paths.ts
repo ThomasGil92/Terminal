@@ -22,7 +22,7 @@ export const paths: IPaths = {
         img: "/img/pnj/Hiboux.png",
       },
     },
-    École: { name: "École", Entrée: { name: "Entrée", message: "Bienvenue" } },
+    École: {placeIntro:["Vous arrivez devant l'école du terminal"], name: "École", Entrée: { name: "Entrée", message: "Bienvenue" } },
     Foret: { name: "Foret" },
   },
 };

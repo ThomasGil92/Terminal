@@ -12,17 +12,24 @@ import {
   setLinesWithDelayFromLineObject,
 } from "../../utils/index";
 import { IPaths, Lines } from "@/utils/@Types";
+import local from "next/font/local";
 
 export function usePathObject(
   cPath: string[] = ["Départ"],
   cObject: IPaths = paths.Départ,
 ) {
+  if (localStorage.getItem("cPath")) {
+    cPath = JSON.parse(localStorage.getItem("cPath")!);
+  }
+  if (localStorage.getItem("cObject")) {
+    cObject = JSON.parse(localStorage.getItem("cObject")!);
+  }
   const [currentPath, setCurrentPath] = useState<string[]>(cPath);
   const [currentObject, setCurrentObject] = useState(cObject);
   const [lines, setLines] = useState<Lines[]>([]);
 
   useEffect(() => {
-    if (cObject.placeIntro) {
+    if (currentObject.placeIntro) {
       /* cObject.placeIntro.forEach((sentence: string, index: number) => {
         setTimeout(() => {
           setLines((prevLines) => [
@@ -34,8 +41,10 @@ export function usePathObject(
           ]);
         }, index * 1000);
       }); */
+      setLinesWithDelayFromStringArray([...cObject.placeIntro, "br"], setLines);
+    } else {
       setLinesWithDelayFromStringArray(
-        [...cObject.placeIntro, `Vous êtes à "${cObject.name}"`,"br"],
+        [`Vous êtes à "${cObject.name}"`, "br"],
         setLines,
       );
     }
@@ -50,8 +59,6 @@ export function usePathObject(
         inputPaths = [...makeNewInputPath(currentPath, inputPaths)];
         const result = findPath(paths, inputPaths);
         if (result) {
-          let allSentences = [];
-          setCurrentPath([...completePath]);
           if (result.placeIntro) {
             setLinesWithDelayFromStringArray(result.placeIntro, setLines);
             /* result.placeIntro.forEach((sentence: string, index: number) => {
@@ -76,6 +83,9 @@ export function usePathObject(
           }
 
           setCurrentObject({ ...result });
+          setCurrentPath([...completePath]);
+          localStorage.setItem("cObject", JSON.stringify({ ...result }));
+          localStorage.setItem("cPath", JSON.stringify([...completePath]));
         } else {
           setLines([
             ...lines,
@@ -169,7 +179,11 @@ export function usePathObject(
         break;
 
       case "help":
-        setLinesWithDelayFromStringArray(paths.commands, setLines,"list__help");
+        setLinesWithDelayFromStringArray(
+          paths.commands,
+          setLines,
+          "list__help",
+        );
         break;
 
       case false:

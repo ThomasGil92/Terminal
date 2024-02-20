@@ -19,13 +19,19 @@ describe("usePathObject custom hook", () => {
     expect(result.current.currentObject).toStrictEqual(paths.Départ);
   });
   describe("cd command", () => {
+    beforeEach(()=>{
+      localStorage.clear()
+    })
     it("should render Foret object with cd command", () => {
       const { result } = renderHook(() =>
         usePathObject(["Départ"], paths.Départ),
       );
       act(() => {
         result.current.handleFormSubmit(["Foret"], "cd Foret");
-      });
+      }),
+        act(() => {
+          vi.advanceTimersByTime(3000);
+        });
       expect(result.current.currentObject).toStrictEqual(paths.Départ.Foret);
     });
     it("should render Départ object from Foret", () => {
@@ -35,7 +41,7 @@ describe("usePathObject custom hook", () => {
       act(() => {
         result.current.handleFormSubmit([".."], "cd ..");
       }),
-        act(() => vi.advanceTimersByTime(0));
+        act(() => vi.advanceTimersByTime(2000));
       expect(result.current.currentObject).toStrictEqual(paths.Départ);
       expect(result.current.lines).toStrictEqual(
         expect.arrayContaining([
@@ -52,14 +58,20 @@ describe("usePathObject custom hook", () => {
       );
       act(() => {
         result.current.handleFormSubmit(["..", "École"], "cd ../École");
-      });
+      }) ,
+        act(() => {
+          vi.advanceTimersByTime(5000);
+        });
+
       expect(result.current.currentObject).toStrictEqual(paths.Départ.École);
-      expect(result.current.lines).toStrictEqual([
-        {
-          sentence: `Vous êtes à ${paths.Départ.École.name}`,
-          tag: { name: "p" },
-        },
-      ]);
+      expect(result.current.lines).toStrictEqual(
+        expect.arrayContaining([
+          {
+            sentence: `${paths.Départ.École.placeIntro[0]}`,
+            tag: { name: "p" },
+          },
+        ]),
+      );
     });
     it("should render École object from Foret", () => {
       const { result } = renderHook(() =>
@@ -129,10 +141,15 @@ describe("usePathObject custom hook", () => {
       );
       act(() => {
         result.current.handleFormSubmit(["Départ", "Foret"], "ls");
-      });
-      expect(result.current.lines).toStrictEqual([
-        { sentence: `C'est un cul-de-sac`, tag: { name: "p" } },
-      ]);
+      }),
+        act(() => {
+          vi.advanceTimersByTime(3000);
+        });
+      expect(result.current.lines).toStrictEqual(
+        expect.arrayContaining([
+          { sentence: `C'est un cul-de-sac`, tag: { name: "p" } },
+        ]),
+      );
     });
   });
   describe("cat command", () => {

@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Terminal
 
-## Getting Started
+![Terminal](https://exemple.com/votre-image.png)
 
-First, run the development server:
+## Description
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Le Jeu d'Entraînement Terminal est une application web construite avec Next.js qui simule un environnement de jeu en ligne de commande. Il est conçu pour aider les développeurs web débutants à se familiariser avec l'utilisation du terminal en fournissant une expérience d'apprentissage interactive et amusante.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Fonctionnalités
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Simulation de CLI :** Vivez une expérience réaliste de l'interface en ligne de commande dans votre navigateur.
+- **Commandes Interactives :** Entraînez-vous à utiliser les commandes de terminal courantes dans un environnement simulé.
+- **Apprentissage Guidé :** Recevez des indices et des conseils pour vous aider à naviguer et à comprendre les commandes du terminal.
+- **Suivi des Progrès :** Suivez vos progrès en complétant divers défis et tâches.(in progress ...)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<!-- ## Utilisation
 
-## Learn More
+Pour utiliser le Jeu d'Entraînement au Terminal :
 
-To learn more about Next.js, take a look at the following resources:
+1. Visitez [Jeu d'Entraînement au Terminal](https://exemple.com) dans votre navigateur web.
+2. Démarrez le jeu en suivant les instructions à l'écran.
+3. Naviguez dans l'interface en ligne de commande virtuelle en utilisant les commandes fournies.
+4. Complétez les défis et les tâches pour améliorer vos compétences en terminal.
+ -->
+## Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Pour exécuter le Jeu d'Entraînement au Terminal localement, suivez ces étapes :
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Clonez ce dépôt sur votre machine locale :
 
-## Deploy on Vercel
+    ```bash
+    git clone git@github.com:ThomasGil92/Terminal.git
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Accédez au répertoire du projet :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    ```bash
+    cd Terminal
+    ```
+
+3. Installez les dépendances :
+
+    ```bash
+    npm install
+    ```
+
+4. Lancez le serveur de développement :
+
+    ```bash
+    npm run dev
+    ```
+
+5. Ouvrez votre navigateur web et visitez [http://localhost:3000](http://localhost:3000) pour accéder au jeu.
+
+<!-- ## Contribution
+
+Les contributions sont les bienvenues ! Si vous souhaitez contribuer au Jeu d'Entraînement au Terminal, veuillez suivre ces étapes -->

@@ -73,7 +73,7 @@ describe("usePathObject custom hook", () => {
         ]),
       );
     });
-    it("should render École object from Foret", () => {
+    it("should render error message", () => {
       const { result } = renderHook(() =>
         usePathObject(["Départ", "Foret"], paths.Départ.Foret),
       );
@@ -81,14 +81,17 @@ describe("usePathObject custom hook", () => {
         result.current.handleFormSubmit(
           ["..", "Discothèque"],
           "cd ../Discothèque",
-        );
+        ),
+        act(() => {
+          vi.advanceTimersByTime(5000);
+        });
       });
-      expect(result.current.lines).toStrictEqual([
+      expect(result.current.lines).toStrictEqual(expect.arrayContaining([
         {
           sentence: `Aucun chemin ne correspond.`,
           tag: { name: "p" },
         },
-      ]);
+      ]));
     });
   });
   describe("ls command", () => {
@@ -179,9 +182,10 @@ describe("usePathObject custom hook", () => {
               name: "img",
             },
           },
-          { sentence: `Hiboux:`, tag: { name: "p" } },
+          { sentence: "Le hiboux vous fixe.", tag: { name: "p" } },
           {
-            sentence: "Bonjour petit homme, enfin reveillé?",
+            sentence:
+              "Puis comme s'il voulait vous montrer le chemin, il tourne la tête vers un somptueux chateau.",
             tag: { name: "p" },
           },
         ]),

@@ -18,10 +18,10 @@ export function usePathObject(
   cPath: string[] = ["Départ"],
   cObject: IPaths = paths.Départ,
 ) {
-  if (localStorage.getItem("cPath")) {
+  if (typeof window !== "undefined" && window.localStorage.getItem("cPath")) {
     cPath = JSON.parse(localStorage.getItem("cPath")!);
   }
-  if (localStorage.getItem("cObject")) {
+  if (typeof window !== "undefined" && window.localStorage.getItem("cObject")) {
     cObject = JSON.parse(localStorage.getItem("cObject")!);
   }
   const [currentPath, setCurrentPath] = useState<string[]>(cPath);
@@ -55,12 +55,16 @@ export function usePathObject(
     const command = isCommand(inputValue);
     switch (command) {
       case "cd":
+        console.log(inputValue);
         const completePath = [...makeNewInputPath(currentPath, inputPaths)];
         inputPaths = [...makeNewInputPath(currentPath, inputPaths)];
         const result = findPath(paths, inputPaths);
         if (result) {
           if (result.placeIntro) {
-            setLinesWithDelayFromStringArray(result.placeIntro, setLines);
+            setLinesWithDelayFromStringArray(
+              [`$ ${inputValue}`, ...result.placeIntro,"br"],
+              setLines,
+            );
             /* result.placeIntro.forEach((sentence: string, index: number) => {
               setTimeout(() => {
                 setLines((prevLines) => [
@@ -76,6 +80,10 @@ export function usePathObject(
             setLines([
               ...lines,
               {
+                sentence: `$ ${inputValue}`,
+                tag: { name: "p" },
+              },
+              {
                 sentence: `Vous êtes à ${result.name}`,
                 tag: { name: "p" },
               },
@@ -84,14 +92,23 @@ export function usePathObject(
 
           setCurrentObject({ ...result });
           setCurrentPath([...completePath]);
+          localStorage.clear();
           localStorage.setItem("cObject", JSON.stringify({ ...result }));
           localStorage.setItem("cPath", JSON.stringify([...completePath]));
         } else {
           setLines([
             ...lines,
             {
+              sentence: `$ ${inputValue}`,
+              tag: { name: "p" },
+            },
+            {
               sentence: `Aucun chemin ne correspond.`,
               tag: { name: "p" },
+            },
+            {
+              sentence: `br`,
+              tag: { name: "br" },
             },
           ]);
         }
@@ -104,6 +121,10 @@ export function usePathObject(
         });
         if (keysWithObjects.length > 0) {
           allSentences.push(
+            {
+              sentence: `$ ${inputValue}`,
+              tag: { name: "p" },
+            },
             {
               sentence: `Vous pouvez accéder à:`,
               tag: { name: "p" },
@@ -135,8 +156,16 @@ export function usePathObject(
           setLines([
             ...lines,
             {
+              sentence: `$ ${inputValue}`,
+              tag: { name: "p" },
+            },
+            {
               sentence: `C'est un cul-de-sac`,
               tag: { name: "p" },
+            },
+            {
+              sentence: `br`,
+              tag: { name: "br" },
             },
           ]);
         }
@@ -147,7 +176,7 @@ export function usePathObject(
         if (pnj) {
           let dialog = [
             {
-              sentence: `${pnj.name}:`,
+              sentence: `$ ${inputValue}`,
               tag: { name: "p" },
             },
           ];
@@ -169,6 +198,10 @@ export function usePathObject(
           : setLinesWithDelayFromLineObject(
               [
                 {
+                  sentence: `$ ${inputValue}`,
+                  tag: { name: "p" },
+                },
+                {
                   sentence: `Aucun personnage ne porte le nom ${inputPaths[0]}`,
                   tag: { name: "p" },
                 },
@@ -180,7 +213,7 @@ export function usePathObject(
 
       case "help":
         setLinesWithDelayFromStringArray(
-          paths.commands,
+          [`$ ${inputValue}`, ...paths.commands],
           setLines,
           "list__help",
         );
@@ -189,6 +222,10 @@ export function usePathObject(
       case false:
         setLines([
           ...lines,
+          {
+            sentence: `$ ${inputValue}`,
+            tag: { name: "p" },
+          },
           { sentence: "Commande inconnue", tag: { name: "p" } },
         ]);
         break;

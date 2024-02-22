@@ -61,7 +61,7 @@ export const paths: IPaths = {
             "- Commencons vite!",
           ],
           pnj: {
-            MaîtreOrion: { name: "Maître Orion Spellbinder", pre_sentence: [//TODO/Ajouter dialog de Orion] },
+            MaîtreOrion: { name: "Maître Orion Spellbinder", pre_sentence: [] },
           },
         },
       },
